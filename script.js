@@ -10,6 +10,7 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
         date: new Date().toISOString()
     };
 
+    const token = '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'; // Token mới của bạn
     const owner = 'Tuedaysnah';
     const repo = 'texxttt';
     const path = 'posts.json';
@@ -32,7 +33,7 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
         return fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
             method: 'PUT',
             headers: {
-                'Authorization': `token YOUR_GITHUB_PERSONAL_ACCESS_TOKEN`, // Bỏ dòng này nếu không dùng token
+                'Authorization': `token ${token}`,
                 'Accept': 'application/vnd.github.v3+json'
             },
             body: JSON.stringify({
