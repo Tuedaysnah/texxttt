@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng tải bài viết</title>
+</head>
+<body>
+    <h1>Đăng tải bài viết</h1>
+    <form id="postForm">
+        <label for="title">Tiêu đề:</label>
+        <input type="text" id="title" name="title" required><br><br>
+        <label for="content">Nội dung:</label><br>
+        <textarea id="content" name="content" rows="10" cols="50" required></textarea><br><br>
+        <button type="submit">Đăng bài</button>
+    </form>
+    <p id="statusMessage"></p>
+    <script src="script.js"></script>
+</body>
+</html>
