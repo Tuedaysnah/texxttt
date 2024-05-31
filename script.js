@@ -10,24 +10,29 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
         date: new Date().toISOString()
     };
 
-    fetch('https://api.github.com/repos/Tuedaysnah/texxttt/contents/posts.json', {
-        method: 'GET',
-        headers: {
-            'Authorization': 'token YOUR_GITHUB_PERSONAL_ACCESS_TOKEN',
-            'Accept': 'application/vnd.github.v3+json'
+    const owner = 'Tuedaysnah';
+    const repo = 'texxttt';
+    const path = 'posts.json';
+
+    // Fetch the existing posts.json file from the repository
+    fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`GitHub API response error: ${response.status} ${response.statusText}`);
         }
+        return response.json();
     })
-    .then(response => response.json())
     .then(data => {
         let sha = data.sha;
         let posts = JSON.parse(atob(data.content));
         posts.push(postData);
         let updatedContent = btoa(JSON.stringify(posts, null, 2));
 
-        fetch('https://api.github.com/repos/Tuedaysnah/texxttt/contents/posts.json', {
+        // Update the posts.json file in the repository
+        return fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
             method: 'PUT',
             headers: {
-                'Authorization': 'token YOUR_GITHUB_PERSONAL_ACCESS_TOKEN',
+                'Authorization': `token YOUR_GITHUB_PERSONAL_ACCESS_TOKEN`, // Bỏ dòng này nếu không dùng token
                 'Accept': 'application/vnd.github.v3+json'
             },
             body: JSON.stringify({
@@ -35,21 +40,16 @@ document.getElementById('postForm').addEventListener('submit', function(event) {
                 content: updatedContent,
                 sha: sha
             })
-        })
-        .then(response => {
-            if (response.ok) {
-                document.getElementById('statusMessage').innerText = 'Bài viết đã được đăng thành công!';
-            } else {
-                document.getElementById('statusMessage').innerText = 'Có lỗi xảy ra khi đăng bài viết.';
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            document.getElementById('statusMessage').innerText = 'Có lỗi xảy ra khi đăng bài viết.';
         });
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`GitHub API response error: ${response.status} ${response.statusText}`);
+        }
+        document.getElementById('statusMessage').innerText = 'Bài viết đã được đăng thành công!';
     })
     .catch(error => {
         console.error('Error:', error);
-        document.getElementById('statusMessage').innerText = 'Có lỗi xảy ra khi lấy dữ liệu từ GitHub.';
+        document.getElementById('statusMessage').innerText = `Có lỗi xảy ra: ${error.message}`;
     });
 });
